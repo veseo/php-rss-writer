@@ -40,6 +40,14 @@ class Item implements ItemInterface
 
     protected $preferCdata = false;
 
+    protected $customData = [];
+
+    public function __call($name, $value)
+    {
+        $this->customData[$name] = $value[0];
+        return $this;
+    }
+
     public function title($title)
     {
         $this->title = $title;
@@ -161,6 +169,10 @@ class Item implements ItemInterface
 
         if (!empty($this->author)) {
             $xml->addChild('author', $this->author);
+        }
+
+        foreach ($this->customData as $field => $data) {
+            $xml->addChild($field, $data);
         }
 
         return $xml;
